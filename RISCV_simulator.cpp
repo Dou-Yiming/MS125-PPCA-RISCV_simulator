@@ -31,7 +31,7 @@ int main()
 		tmp = 0;
 	}
 	puts("success input");*/
-	freopen("testcases\\hanoi.data", "r", stdin);
+	//freopen("testcases\\hanoi.data", "r", stdin);
 	//读入内存
 	unsigned int tmp = 0;
 	instruction ins;
