@@ -151,6 +151,7 @@ public:
                 pc = cur_pc + cur_ins.imm;
                 isBranched = 1;
             }
+            ++totalPrediction;
         }
         else
         {
@@ -330,6 +331,7 @@ public:
     unsigned int cur_rs1;
     unsigned int cur_rs2;
     unsigned int cur_rd;
+    unsigned int cur_period = 0;
     MEM_reg()
     {
         isEmpty = 1;
@@ -345,6 +347,7 @@ public:
         cur_rs2 = cur_EX.cur_rs2;
         cur_rd = cur_EX.cur_rd;
         vrd = cur_EX.vrd;
+        cur_period = 1;
         switch (iname)
         {
         case LB:
@@ -390,6 +393,22 @@ public:
     }
     void operate_WB()
     {
+        switch (iname)
+        {
+        case LB:
+        case LH:
+        case LW:
+        case LBU:
+        case LHU:
+        case SB:
+        case SH:
+        case SW:
+            if (cur_period != 3)
+            {
+                ++cur_period;
+                return;
+            }
+        }
         switch (iname)
         {
         case BEQ:
