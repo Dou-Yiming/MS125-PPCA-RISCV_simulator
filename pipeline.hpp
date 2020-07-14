@@ -24,7 +24,6 @@ public:
         cur_pc = pc;
         memcpy(&cur_ins, mem + cur_pc, sizeof(unsigned int));
         pc += 4;
-        //std::cout<<cur_ins<<std::endl;
     }
 };
 class ID_reg
@@ -34,6 +33,7 @@ public:
     instruction cur_ins;
     unsigned int cur_pc;
     unsigned int val1, val2;
+    bool isBranched;
 
     ID_reg()
     {
@@ -117,10 +117,10 @@ public:
         if (cur_ins.name == JALR)
             pc = (reg[cur_ins.rs1] + cur_ins.imm) & (-2u);
 
-        //predict
+        //branch prediction
         if (cur_ins.name >= 29 && cur_ins.name <= 34)
         {
-            switch (cur_ins.name)
+            /*switch (cur_ins.name)
             {
             case BEQ:
                 pc = cur_pc + ((reg[cur_ins.rs1] == reg[cur_ins.rs2]) ? cur_ins.imm : 4);
@@ -140,6 +140,16 @@ public:
             case BGEU:
                 pc = cur_pc + ((reg[cur_ins.rs1] >= reg[cur_ins.rs2]) ? cur_ins.imm : 4);
                 break;
+            }*/
+            if (counter <= 1)
+            {
+                pc = cur_pc + 4;
+                isBranched = 0;
+            }
+            else
+            {
+                pc = cur_pc + cur_ins.imm;
+                isBranched = 1;
             }
         }
         else
@@ -191,22 +201,22 @@ public:
             break;
 
         case BEQ:
-            judge_SB(reg[cur_rs1] == reg[cur_rs2], cur_IF);
+            judge_SB(reg[cur_rs1] == reg[cur_rs2], cur_IF, cur_ID);
             break;
         case BNE:
-            judge_SB(reg[cur_rs1] != reg[cur_rs2], cur_IF);
+            judge_SB(reg[cur_rs1] != reg[cur_rs2], cur_IF, cur_ID);
             break;
         case BLT:
-            judge_SB((int)reg[cur_rs1] < (int)reg[cur_rs2], cur_IF);
+            judge_SB((int)reg[cur_rs1] < (int)reg[cur_rs2], cur_IF, cur_ID);
             break;
         case BGE:
-            judge_SB((int)reg[cur_rs1] >= (int)reg[cur_rs2], cur_IF);
+            judge_SB((int)reg[cur_rs1] >= (int)reg[cur_rs2], cur_IF, cur_ID);
             break;
         case BLTU:
-            judge_SB(reg[cur_rs1] < reg[cur_rs2], cur_IF);
+            judge_SB(reg[cur_rs1] < reg[cur_rs2], cur_IF, cur_ID);
             break;
         case BGEU:
-            judge_SB(reg[cur_rs1] >= reg[cur_rs2], cur_IF);
+            judge_SB(reg[cur_rs1] >= reg[cur_rs2], cur_IF, cur_ID);
             break;
 
         case ADDI:
@@ -276,13 +286,37 @@ public:
         }
         reg[0] = 0;
     }
-    void judge_SB(bool res, IF_reg &cur_IF)
+    void judge_SB(bool res, IF_reg &cur_IF, ID_reg &cur_ID)
     {
-        if (res)
+        /*if (res)
             pc = cur_pc + cur_imm;
         else
             pc = cur_pc + 4;
-        cur_IF.isEmpty = 1;
+        cur_IF.isEmpty = 1;*/
+        if (res)
+        {
+            if (cur_ID.isBranched)
+                ++correctPrediction;
+            else
+            {
+                pc = cur_pc + cur_imm;
+                cur_IF.isEmpty = 1;
+            }
+            if (counter < 3u)
+                ++counter;
+        }
+        else
+        {
+            if (cur_ID.isBranched)
+            {
+                pc = cur_pc + 4;
+                cur_IF.isEmpty = 1;
+            }
+            else
+                ++correctPrediction;
+            if (counter > 0)
+                --counter;
+        }
     }
 };
 class MEM_reg

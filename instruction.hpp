@@ -317,7 +317,6 @@ public:
 			reg[rd] = pc + 4;
 			break;
 
-
 		case ADDI:
 			reg[rd] = reg[rs1] + imm;
 			break;
@@ -426,29 +425,29 @@ public:
 		case SW:
 			memcpy(mem + (reg[rs1] + imm), &reg[rs2], sizeof(unsigned int));
 			break;
-//跳转
+			//跳转
 		case BEQ:
-		    pc-=4;
+			pc -= 4;
 			pc += (reg[rs1] == reg[rs2]) ? imm : 4;
 			break;
 		case BNE:
-		    pc-=4;
+			pc -= 4;
 			pc += (reg[rs1] != reg[rs2]) ? imm : 4;
 			break;
 		case BLT:
-		    pc-=4;
+			pc -= 4;
 			pc += ((int)reg[rs1] < (int)reg[rs2]) ? imm : 4;
 			break;
 		case BGE:
-		    pc-=4;
+			pc -= 4;
 			pc += ((int)reg[rs1] >= (int)reg[rs2]) ? imm : 4;
 			break;
 		case BLTU:
-		    pc-=4;
+			pc -= 4;
 			pc += (reg[rs1] < reg[rs2]) ? imm : 4;
 			break;
 		case BGEU:
-		    pc-=4;
+			pc -= 4;
 			pc += (reg[rs1] >= reg[rs2]) ? imm : 4;
 			break;
 		default:
