@@ -175,9 +175,7 @@ public:
     {
         if (res)
         {
-            //if (cur_ID.isBranched)
-                //++correctPrediction;
-            else
+            if (!cur_ID.isBranched)
             {
                 pc = cur_pc + cur_imm;
                 cur_IF.isEmpty = 1;
