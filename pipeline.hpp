@@ -175,8 +175,8 @@ public:
     {
         if (res)
         {
-            if (cur_ID.isBranched)
-                ++correctPrediction;
+            //if (cur_ID.isBranched)
+                //++correctPrediction;
             else
             {
                 pc = cur_pc + cur_imm;
@@ -192,8 +192,8 @@ public:
                 pc = cur_pc + 4;
                 cur_IF.isEmpty = 1;
             }
-            else
-                ++correctPrediction;
+            //else
+                //++correctPrediction;
             if (counter[cur_pc % 32] > 0)
                 --counter[cur_pc % 32];
         }
@@ -480,7 +480,7 @@ void ID_reg::operate_ID(IF_reg &cur_IF, EX_reg &cur_EX, MEM_reg &cur_MEM)
             pc = cur_pc + cur_ins.imm;
             isBranched = 1;
         }
-        ++totalPrediction;
+        //++totalPrediction;
     }
 }
 #endif
