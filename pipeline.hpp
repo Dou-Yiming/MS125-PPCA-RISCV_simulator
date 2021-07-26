@@ -14,10 +14,7 @@ public:
     bool isEmpty;
     unsigned int cur_ins;
     unsigned int cur_pc;
-    IF_reg()
-    {
-        isEmpty = 1;
-    }
+    IF_reg():isEmpty(true) {}
     void operate_IF()
     {
         isEmpty = 0;
@@ -35,10 +32,7 @@ public:
     unsigned int val1, val2;
     bool isBranched;
 
-    ID_reg()
-    {
-        isEmpty = 1;
-    }
+    ID_reg():isEmpty(true){}
     void operate_ID(IF_reg &cur_IF, EX_reg &cur_EX, MEM_reg &cur_MEM);
 };
 class EX_reg
@@ -190,8 +184,8 @@ public:
                 pc = cur_pc + 4;
                 cur_IF.isEmpty = 1;
             }
-            //else
-                //++correctPrediction;
+            else
+                ++correctPrediction;
             if (counter[cur_pc % 32] > 0)
                 --counter[cur_pc % 32];
         }
@@ -277,14 +271,8 @@ public:
     {
         switch (iname)
         {
-        case LB:
-        case LH:
-        case LW:
-        case LBU:
-        case LHU:
-        case SB:
-        case SH:
-        case SW:
+        case LB:case LH:case LW:case LBU:case LHU:
+        case SB:case SH:case SW:
             if (cur_period != 3)
             {
                 ++cur_period;
@@ -295,15 +283,8 @@ public:
         }
         switch (iname)
         {
-        case BEQ:
-        case BNE:
-        case BLT:
-        case BGE:
-        case BLTU:
-        case BGEU:
-        case SB:
-        case SH:
-        case SW:
+        case BEQ:case BNE:case BLT:case BGE:case BLTU:case BGEU:
+        case SB:case SH:case SW:
             break;
         default:
             if (cur_rd)
@@ -330,29 +311,16 @@ void ID_reg::operate_ID(IF_reg &cur_IF, EX_reg &cur_EX, MEM_reg &cur_MEM)
     //forwarding
     switch (cur_ins.name)
     {
-    case LUI:
-    case AUIPC:
-    case JAL:
+    case LUI: case AUIPC: case JAL:
         if (used[cur_ins.rd])
             return;
         used[cur_ins.rd] = 1;
         used[0] = 0;
         break;
-    case JALR:
-    case LB:
-    case LH:
-    case LW:
-    case LBU:
-    case LHU:
-    case ADDI:
-    case SLTI:
-    case SLTIU:
-    case XORI:
-    case ORI:
-    case ANDI:
-    case SLLI:
-    case SRLI:
-    case SRAI: //rd&rs1
+    case JALR:case LB:case LH:case LW:case LBU:case LHU:
+    case ADDI:case SLTI:case SLTIU:
+    case XORI:case ORI:case ANDI:
+    case SLLI:case SRLI:case SRAI: //rd&rs1
         if (used[cur_ins.rd])
             return;
         if (used[cur_ins.rs1])
@@ -371,25 +339,10 @@ void ID_reg::operate_ID(IF_reg &cur_IF, EX_reg &cur_EX, MEM_reg &cur_MEM)
         used[cur_ins.rd] = 1;
         used[0] = 0;
         break;
-    case ADD:
-    case SUB:
-    case SLL:
-    case SLT:
-    case SLTU:
-    case XOR:
-    case SRL:
-    case SRA:
-    case OR:
-    case AND:
-    case SB:
-    case SH:
-    case SW:
-    case BEQ:
-    case BNE:
-    case BLT:
-    case BGE:
-    case BLTU:
-    case BGEU: //rd&rs1&rs2
+    case ADD:case SUB:case SLL:case SLT:case SLTU:
+    case XOR:case SRL:case SRA:case OR:case AND:
+    case SB:case SH:case SW:
+    case BEQ:case BNE:case BLT:case BGE:case BLTU:case BGEU: //rd&rs1&rs2
         if (used[cur_ins.rd])
             return;
         if (used[cur_ins.rs1])
@@ -435,16 +388,8 @@ void ID_reg::operate_ID(IF_reg &cur_IF, EX_reg &cur_EX, MEM_reg &cur_MEM)
         }
         switch (cur_ins.name)
         {
-        case ADD:
-        case SUB:
-        case SLL:
-        case SLT:
-        case SLTU:
-        case XOR:
-        case SRL:
-        case SRA:
-        case OR:
-        case AND:
+        case ADD:case SUB:case SLL:case SLT:case SLTU:
+        case XOR:case SRL:case SRA:case OR:case AND:
             used[cur_ins.rd] = 1;
             used[0] = 0;
         }
@@ -478,7 +423,7 @@ void ID_reg::operate_ID(IF_reg &cur_IF, EX_reg &cur_EX, MEM_reg &cur_MEM)
             pc = cur_pc + cur_ins.imm;
             isBranched = 1;
         }
-        //++totalPrediction;
+        ++totalPrediction;
     }
 }
 #endif

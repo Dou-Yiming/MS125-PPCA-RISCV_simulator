@@ -2,7 +2,7 @@
 //主函数
 int main()
 {
-	//freopen("testcases\\hanoi.data", "r", stdin);
+	freopen("data\\riscv-testcases\\testcases\\pi.data", "r", stdin);
 	//读入内存
 	unsigned int tmp = 0;
 	instruction ins;
@@ -28,6 +28,7 @@ int main()
 	ID_reg cur_ID;
 	EX_reg cur_EX;
 	MEM_reg cur_MEM;
+	register int i;
 	do
 	{
 		if (!cur_MEM.isEmpty)
@@ -40,15 +41,16 @@ int main()
 			cur_ID.operate_ID(cur_IF, cur_EX, cur_MEM);
 		if (cur_IF.isEmpty && !isEnd)
 			cur_IF.operate_IF();
-		//for (int i = 0; i < 32; ++i)
-		//	std::cout << reg[i] << "  ";
-		//std::cout << std::endl;
+		// for (i = 0; i < 32; ++i)
+			// printf("%d ",(reg[i]));
+		// printf("\n");
+		// std::cout << std::endl;
 	} while (!cur_IF.isEmpty || !cur_ID.isEmpty || !cur_EX.isEmpty || !cur_MEM.isEmpty);
 
 	unsigned int ans = (unsigned int)reg[10];
 	std::cout << (ans & 255u) << std::endl;
-	//std::cout << "correct Prediction:" << correctPrediction << std::endl;
-	//std::cout << "total Prediction:" << totalPrediction << std::endl;
-	//std::cout << "accuracy:" << ((double)correctPrediction / (double)totalPrediction) * 100 << "%" << std::endl;
+	std::cout << "correct Prediction:" << correctPrediction << std::endl;
+	std::cout << "total Prediction:" << totalPrediction << std::endl;
+	std::cout << "accuracy:" << ((double)correctPrediction / (double)totalPrediction) * 100 << "%" << std::endl;
 	return 0;
 }

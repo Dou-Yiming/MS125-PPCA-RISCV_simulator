@@ -425,30 +425,25 @@ public:
 		case SW:
 			memcpy(mem + (reg[rs1] + imm), &reg[rs2], sizeof(unsigned int));
 			break;
+			
 			//跳转
 		case BEQ:
-			pc -= 4;
-			pc += (reg[rs1] == reg[rs2]) ? imm : 4;
+			pc += (reg[rs1] == reg[rs2]) ? imm : 0;
 			break;
 		case BNE:
-			pc -= 4;
-			pc += (reg[rs1] != reg[rs2]) ? imm : 4;
+			pc += (reg[rs1] != reg[rs2]) ? imm : 0;
 			break;
 		case BLT:
-			pc -= 4;
-			pc += ((int)reg[rs1] < (int)reg[rs2]) ? imm : 4;
+			pc += ((int)reg[rs1] < (int)reg[rs2]) ? imm : 0;
 			break;
 		case BGE:
-			pc -= 4;
-			pc += ((int)reg[rs1] >= (int)reg[rs2]) ? imm : 4;
+			pc += ((int)reg[rs1] >= (int)reg[rs2]) ? imm : 0;
 			break;
 		case BLTU:
-			pc -= 4;
-			pc += (reg[rs1] < reg[rs2]) ? imm : 4;
+			pc += (reg[rs1] < reg[rs2]) ? imm : 0;
 			break;
 		case BGEU:
-			pc -= 4;
-			pc += (reg[rs1] >= reg[rs2]) ? imm : 4;
+			pc += (reg[rs1] >= reg[rs2]) ? imm : 0;
 			break;
 		default:
 			break;
